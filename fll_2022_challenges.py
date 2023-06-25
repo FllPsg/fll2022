@@ -194,17 +194,32 @@ def show_menu():
                 ev3.screen.print("Run 2")
                 ev3.screen.print("Run 3 ***")
             button_pressed = False
-        
+
+def run1():
+    gyrospinturn(-32,50)
+    accDecDrive(1.15,200)
+    gyrospinturn(-47.5,50)
+    accDecDrive(3.35,200)
+    gyrospinturn(43.5,50)
+    accDecDrive(1.25,200)
+    gyrospinturn(84,50)
+    accDecDrive(0.85,2000)
+    gyrospinturn(-71,50)
+    accDecDrive(2.75,200)
+    gyrospinturn(40,50)
+    accDecDrive(4.65,300)
+
 # Main program starts here
 current_row = 1
 key = show_menu()
 ev3.screen.clear()
 if key == 1:
+    wait(150)
     ev3.screen.print("Run 1")
+    run1()
 elif key == 2:
     ev3.screen.print("Run 2")
 elif key == 3:
     ev3.screen.print("Run 3")
 wait(5000)
     
-
