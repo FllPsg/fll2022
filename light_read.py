@@ -22,6 +22,7 @@ while True:
     ev3.screen.clear() 
     ev3.screen.print(s)
     if Button.CENTER in ev3.buttons.pressed():
+        wait(150)
         ev3.speaker.beep()
         break
 
@@ -32,6 +33,7 @@ while True:
     ev3.screen.clear()
     ev3.screen.print(s)
     if Button.CENTER in ev3.buttons.pressed():
+        wait(150)
         ev3.speaker.beep()
         break
 
@@ -41,6 +43,7 @@ while True:
     ev3.screen.clear() 
     ev3.screen.print(s)
     if Button.CENTER in ev3.buttons.pressed():
+        wait(150)
         ev3.speaker.beep()
         break
 
@@ -51,6 +54,7 @@ while True:
     ev3.screen.clear()
     ev3.screen.print(s)
     if Button.CENTER in ev3.buttons.pressed():
+        wait(150)
         ev3.speaker.beep()
         break
 

@@ -80,7 +80,11 @@ def accDecDrive(rotations,speed):
     right_motor.reset_angle(0)
     target_deg=rotations*360
     target_speed = speed
+
+    #Initialize local variables
     speed = 60
+    cruising_point = 0
+    dec_point = target_deg
 
     while True:
         if abs(left_motor.angle())>=target_deg:
@@ -88,15 +92,24 @@ def accDecDrive(rotations,speed):
             break
         else:
             gyro_error = 0-(gyro.angle())
-            if speed<0:
+            if speed < 0:
                 gyro_error *= -1
-            robot.drive(speed, 2*gyro_error)
-            if (abs(left_motor.angle())>=target_deg*0.6):
-                if (speed > 100):
-                    speed -= 5
-                    ev3.screen.print(str(speed))
+            robot.drive(speed, 2*gyro_error)     
+            if (abs(left_motor.angle())>=dec_point):
+                #Decelarate from deceleration point
+                speed -= 5
+                ev3.screen.print(str(speed))
             elif (speed < target_speed):
+                # Accelerate till cruising pont where the top speed = target_speed
                 speed += 5
+                if speed >= target_speed:
+                    cruising_point = abs(left_motor.angle())
+                    if target_deg > (2 * cruising_point):
+                        dec_point = target_deg - cruising_point
+                    else:
+                        dec_point = cruising_point
+                        ev3.screen.print("*** Target distance too small!")
+                        ev3.speaker.beep()
                 ev3.screen.print(str(speed))
 
 def gems(rotations,speed):
@@ -159,6 +172,7 @@ def show_menu():
     ev3.screen.print("Run 1 ***")
     ev3.screen.print("Run 2")
     ev3.screen.print("Run 3")
+    ev3.screen.print("Exit")
     while True:
         if Button.CENTER in ev3.buttons.pressed():
             wait(150)
@@ -166,13 +180,13 @@ def show_menu():
         elif Button.UP in ev3.buttons.pressed():
             wait(150)
             if current_row == 1:
-                current_row = 3
+                current_row = 4
             else:
                 current_row -= 1
             button_pressed=True
         elif Button.DOWN in ev3.buttons.pressed():
             wait(150)
-            if current_row == 3:
+            if current_row == 4:
                 current_row = 1
             else:
                 current_row += 1
@@ -183,43 +197,59 @@ def show_menu():
                 ev3.screen.print("Run 1 ***")
                 ev3.screen.print("Run 2")
                 ev3.screen.print("Run 3")
+                ev3.screen.print("Exit")
             elif current_row == 2:
                 ev3.screen.clear()
                 ev3.screen.print("Run 1")
                 ev3.screen.print("Run 2 ***")
                 ev3.screen.print("Run 3")
+                ev3.screen.print("Exit")
             elif current_row == 3:
                 ev3.screen.clear()
                 ev3.screen.print("Run 1")
                 ev3.screen.print("Run 2")
                 ev3.screen.print("Run 3 ***")
+                ev3.screen.print("Exit")
+            elif current_row == 4:
+                ev3.screen.clear()
+                ev3.screen.print("Run 1")
+                ev3.screen.print("Run 2")
+                ev3.screen.print("Run 3")
+                ev3.screen.print("Exit ***")
             button_pressed = False
 
 def run1():
-    gyrospinturn(-32,50)
+    gyrospinturn(-31,200)
     accDecDrive(1.15,200)
-    gyrospinturn(-47.5,50)
+    gyrospinturn(-42,200)
     accDecDrive(3.35,200)
-    gyrospinturn(43.5,50)
-    accDecDrive(1.25,200)
-    gyrospinturn(84,50)
-    accDecDrive(0.85,2000)
-    gyrospinturn(-71,50)
-    accDecDrive(2.75,200)
-    gyrospinturn(40,50)
-    accDecDrive(4.65,300)
-
+    gyrospinturn(45,200)
+    accDecDrive(1,200)
+    gyrospinturn(85,200)
+    # distance too small
+    accDecDrive(0.7,200)
+    gyrospinturn(-60,200)
+    accDecDrive(3,200)
+    gyrospinturn(22,200)
+    accDecDrive(5.5,300)
+    
 # Main program starts here
 current_row = 1
-key = show_menu()
-ev3.screen.clear()
-if key == 1:
-    wait(150)
-    ev3.screen.print("Run 1")
-    run1()
-elif key == 2:
-    ev3.screen.print("Run 2")
-elif key == 3:
-    ev3.screen.print("Run 3")
-wait(5000)
+while True:
+    key = show_menu()
+    ev3.screen.clear()
+    if key == 1:
+        wait(150)
+        ev3.screen.print("Run 1")
+        run1()
+        show_menu()
+    elif key == 2:
+        ev3.screen.print("Run 2")
+        show_menu()
+    elif key == 3:
+        ev3.screen.print("Run 3")
+        show_menu()
+    elif key == 4:
+        exit
+
     
